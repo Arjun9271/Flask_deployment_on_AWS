@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        /* Color Psychology-based Variables */
+        :root {
+            --primary: #6366f1;      /* Trust, intelligence */
+            --secondary: #8b5cf6;    /* Creativity, wisdom */
+            --success: #22c55e;      /* Success, growth */
+            --warning: #f59e0b;      /* Attention, energy */
+            --error: #ef4444;        /* Error, importance */
+            
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            
+            --shadow-sm: 0 2px 4px rgba(99, 102, 241, 0.1);
+            --shadow-md: 0 4px 6px rgba(99, 102, 241, 0.15);
+            --shadow-lg: 0 8px 16px rgba(99, 102, 241, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 1rem;
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header p {
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--bg-secondary);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-primary);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.2), transparent);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover::before {
+            transform: translateY(0);
+        }
+
+        .matches {
+            margin-top: 2rem;
+        }
+
+        .match-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s ease;
+        }
+
+        .match-item:hover {
+            transform: translateX(5px);
+        }
+
+        .match-info {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .result-message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .result-message.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .result-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .helper-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>{{ title }}</h1>
+            <p>Test your regular expressions and validate email addresses with ease</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('pattern')">Pattern Matcher</button>
+            <button class="tab" onclick="showTab('email')">Email Validator</button>
+        </div>
+
+        <div id="pattern-tab" class="card">
+            <h2>Pattern Matcher</h2>
+            <form id="pattern-form" onsubmit="handlePatternSubmit(event)">
+                <div class="form-group">
+                    <label for="inputText">Text to Search</label>
+                    <textarea 
+                        name="inputText" 
+                        id="inputText" 
+                        rows="4" 
+                        required
+                    ></textarea>
+                    <div class="helper-text">Enter the text you want to search through</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pattern">Regular Expression Pattern</label>
+                    <input 
+                        type="text" 
+                        name="pattern" 
+                        id="pattern" 
+                        required
+                    >
+                    <div class="helper-text">Enter your regex pattern (e.g., \b\w+@\w+\.\w+\b for emails)</div>
+                </div>
+
+                <button type="submit" class="btn">Find Matches</button>
+            </form>
+
+            <div id="pattern-results"></div>
+        </div>
+
+        <div id="email-tab" class="card" style="display: none;">
+            <h2>Email Validator</h2>
+            <form id="email-form" onsubmit="handleEmailSubmit(event)">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        required
+                    >
+                    <div class="helper-text">Enter an email address to validate</div>
+                </div>
+
+                <button type="submit" class="btn">Validate Email</button>
+            </form>
+
+            <div id="email-results"></div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.getElementById('pattern-tab').style.display = 'none';
+            document.getElementById('email-tab').style.display = 'none';
+            
+            document.getElementById(`${tabName}-tab`).style.display = 'block';
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function createMatchElement(match) {
+            return `
+                <div class="match-item">
+                    <div class="match-text">${match.text}</div>
+                    <div class="match-info">Position: ${match.start} - ${match.end}</div>
+                </div>
+            `;
+        }
+
+        function createResultMessage(result) {
+            return `
+                <div class="result-message ${result.is_valid ? 'success' : 'error'}">
+                    ${result.message}
+                </div>
+            `;
+        }
+
+        async function handlePatternSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const resultsDiv = document.getElementById('pattern-results');
+
+            try {
+                const response = await fetch('/match_pattern', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                let html = createResultMessage(result);
+                
+                if (result.matches && result.matches.length > 0) {
+                    html = `
+                        <div class="matches">
+                            <h3>Found ${result.total_matches} matches:</h3>
+                            ${result.matches.map(match => createMatchElement(match)).join('')}
+                        </div>
+                        ${html}
+                    `;
+                }
+                
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = createResultMessage({
+                    is_valid: false,
+                    message: 'An error occurred while processing your request.'
+                });
+            }
+        }
+
+        async function handleEmailSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const resultsDiv = document.getElementById('email-results');
+
+            try {
+                const response = await fetch('/validate_email', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                resultsDiv.innerHTML = createResultMessage(result);
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = createResultMessage({
+                    is_valid: false,
+                    message: 'An error occurred while processing your request.'
+                });
+            }
+        }
+    </script>
+</body>
+</html>
